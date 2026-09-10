@@ -1,0 +1,177 @@
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type Value = 
+ variant {
+   "bool": bool;
+   float: float64;
+   "int": int;
+   "nat": nat;
+   "null";
+   "text": text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type ShareId = nat;
+type Share = 
+ record {
+   createdAt: int;
+   id: ShareId;
+   itemId: nat;
+   itemKind: ItemKind;
+   permission: Permission;
+   sharedBy: principal;
+   sharedWith: principal;
+ };
+type SearchResult = 
+ record {
+   files: vec FileEntry;
+   folders: vec Folder;
+ };
+type Result__1 = 
+ variant {
+   err: Error;
+   ok;
+ };
+type Result = 
+ record {
+   hasMore: bool;
+   rows: vec vec Cell;
+ };
+type Permission = 
+ variant {
+   edit;
+   readOnly;
+ };
+type ItemKind = 
+ variant {
+   file;
+   folder;
+ };
+type FolderId = nat;
+type FolderContents = 
+ record {
+   files: vec FileEntry;
+   folders: vec Folder;
+ };
+type Folder = 
+ record {
+   createdAt: int;
+   id: FolderId;
+   name: text;
+   owner: principal;
+   parentId: opt FolderId;
+   updatedAt: int;
+ };
+type FileId = nat;
+type FileEntry = 
+ record {
+   "blob": ExternalBlob;
+   createdAt: int;
+   folderId: FolderId;
+   id: FileId;
+   mimeType: text;
+   name: text;
+   owner: principal;
+   size: nat;
+   updatedAt: int;
+ };
+type ExternalBlob = blob;
+type Error = 
+ variant {
+   AmbiguousAttribute: record {
+                         field: text;
+                         sources: vec text;
+                       };
+   FrontendOriginMismatch: record {
+                             expected: vec text;
+                             got: text;
+                           };
+   FrontendOriginsNotConfigured;
+   MalformedCandid;
+   MissingField: text;
+   MixedSsoSources: record {
+                      otherKeys: vec text;
+                      ssoKeys: vec text;
+                    };
+   NoAttributes;
+   Stale: record {ageNs: nat;};
+   UnknownNonce;
+   UntrustedSsoSource: record {domain: text;};
+ };
+type Cell = 
+ record {
+   name: text;
+   value: Value;
+ };
+type ActivityId = nat;
+type ActivityEntry = 
+ record {
+   action: ActivityAction;
+   atNs: int;
+   id: ActivityId;
+   itemId: nat;
+   itemKind: ItemKind;
+   itemName: text;
+   owner: principal;
+ };
+type ActivityAction = 
+ variant {
+   create;
+   delete;
+   move;
+   permissionChange;
+   rename;
+   revoke;
+   share;
+   upload;
+ };
+service : {
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  _initialize_access_control: () -> ();
+  _internet_identity_sign_in_finish: () -> (Result__1);
+  _internet_identity_sign_in_start: () -> (blob);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  createFolder: (name: text, parentId: opt FolderId) -> (Folder);
+  deleteFile: (fileId: FileId) -> (bool);
+  deleteFolder: (folderId: FolderId) -> (bool);
+  execute: (qJson: text) -> (Result) query;
+  getActivity: (limit: nat) -> (vec ActivityEntry) query;
+  getApiDoc: () -> (text) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getFile: (fileId: FileId) -> (opt FileEntry) query;
+  isCallerAdmin: () -> (bool) query;
+  listFolderContents: (folderId: FolderId) -> (FolderContents) query;
+  listShares: () -> (vec Share) query;
+  moveFolder: (folderId: FolderId, newParentId: opt FolderId) -> (opt Folder);
+  renameFolder: (folderId: FolderId, newName: text) -> (opt Folder);
+  revokeShare: (shareId: ShareId) -> (bool);
+  schema: () -> (text) query;
+  searchFiles: (term: text) -> (SearchResult) query;
+  shareItem: (itemKind: ItemKind, itemId: nat, sharedWith: principal,
+   permission: Permission) -> (Share);
+  uploadFile: (name: text, folderId: FolderId, "blob": ExternalBlob, size:
+   nat, mimeType: text) -> (FileEntry);
+}

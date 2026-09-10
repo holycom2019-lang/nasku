@@ -1,0 +1,18 @@
+{
+  "overview": "Nasku adalah aplikasi manajemen file NAS untuk berbagi folder dan file secara aman, lengkap dengan dokumentasi flowchart alur penggunaannya.",
+  "features": [
+    "Jelajah folder dan file dengan navigasi breadcrumb",
+    "Unggah, ganti nama, pindah, dan hapus file",
+    "Berbagi item dengan izin baca atau edit",
+    "Pencarian file dan riwayat aktivitas",
+    "Dokumentasi flowchart alur aplikasi"
+  ],
+  "category": "productivity",
+  "tags": [
+    "nas",
+    "file-management",
+    "sharing",
+    "productivity"
+  ],
+  "last_updated": "2026-09-10T08:20:52.765Z"
+}

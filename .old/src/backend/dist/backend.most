@@ -1,0 +1,175 @@
+// Version: 4.0.0
+type AccessControlState__237232917 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__386906547<Principal, UserRole__778770049>
+  };
+type ActivityAction__926960837 =
+  {
+    #create;
+    #delete;
+    #move;
+    #permissionChange;
+    #rename;
+    #revoke;
+    #share;
+    #upload
+  };
+type ActivityEntry__470865600 =
+  {
+    action : ActivityAction__926960837;
+    atNs : Int;
+    id : ActivityId__26058384;
+    itemId : Nat;
+    itemKind : ItemKind__170971189;
+    itemName : Text;
+    owner : Principal
+  };
+type ActivityEntry__852217073 =
+  {
+    action :
+      {
+        #create;
+        #delete;
+        #move;
+        #permissionChange;
+        #rename;
+        #revoke;
+        #share;
+        #upload
+      };
+    atNs : Int;
+    id : Nat;
+    itemId : Nat;
+    itemKind : {#file; #folder};
+    itemName : Text;
+    owner : Principal
+  };
+type ActivityId__26058384 = Nat;
+type Data__265875254<K, V> = {var count : Nat__58649523; kvs : [var ?(K, V)]};
+type ExternalBlob__220559234 = Blob;
+type FileEntry__396904133 =
+  {
+    blob : ExternalBlob__220559234;
+    createdAt : Int;
+    folderId : FolderId__400921978;
+    id : FileId__570043862;
+    mimeType : Text;
+    name : Text;
+    owner : Principal;
+    size : Nat;
+    updatedAt : Int
+  };
+type FileEntry__491646976 =
+  {
+    blob : Blob;
+    createdAt : Int;
+    folderId : Nat;
+    id : Nat;
+    mimeType : Text;
+    name : Text;
+    owner : Principal;
+    size : Nat;
+    updatedAt : Int
+  };
+type FileId__570043862 = Nat;
+type FilesState__1055236057 =
+  {
+    activity : List__89170296<ActivityEntry__852217073>;
+    files : Map__386906547<Nat, FileEntry__491646976>;
+    folders : Map__386906547<Nat, Folder__439137136>;
+    var nextActivityId : Nat;
+    var nextFileId : Nat;
+    var nextFolderId : Nat;
+    var nextShareId : Nat;
+    shares : Map__386906547<Nat, Share__197429383>
+  };
+type FolderId__400921978 = Nat;
+type Folder__439137136 =
+  {
+    createdAt : Int;
+    id : Nat;
+    name : Text;
+    owner : Principal;
+    parentId : ?Nat;
+    updatedAt : Int
+  };
+type Folder__635271204 =
+  {
+    createdAt : Int;
+    id : FolderId__400921978;
+    name : Text;
+    owner : Principal;
+    parentId : ?FolderId__400921978;
+    updatedAt : Int
+  };
+type Internal__161573640<K, V> =
+  {children : [var ?Node__430031793<K, V>]; data : Data__265875254<K, V>};
+type ItemKind__170971189 = {#file; #folder};
+type Leaf__1045638083<K, V> = {data : Data__265875254<K, V>};
+type List__1004628775<T> =
+  {
+    var blockIndex : Nat__58649523;
+    var blocks : [var [var ?T]];
+    var elementIndex : Nat__58649523
+  };
+type List__89170296<T> = List__1004628775<T>;
+type Map__13625999<K, V> =
+  {var root : Node__430031793<K, V>; var size : Nat__58649523};
+type Map__386906547<K, V> = Map__670138087<K, V>;
+type Map__670138087<K, V> = Map__13625999<K, V>;
+type Nat__58649523 = Nat__920180692;
+type Nat__920180692 = Nat;
+type NewActor__556041151 =
+  {
+    accessControlState : AccessControlState__237232917;
+    filesState : FilesState__1055236057
+  };
+type Node__430031793<K, V> =
+  {#internal : Internal__161573640<K, V>; #leaf : Leaf__1045638083<K, V>};
+type OldActor__190834961 = {};
+type Permission__306695570 = {#edit; #readOnly};
+type ShareId__1065474443 = Nat;
+type Share__197429383 =
+  {
+    createdAt : Int;
+    id : Nat;
+    itemId : Nat;
+    itemKind : {#file; #folder};
+    permission : {#edit; #readOnly};
+    sharedBy : Principal;
+    sharedWith : Principal
+  };
+type Share__801434090 =
+  {
+    createdAt : Int;
+    id : ShareId__1065474443;
+    itemId : Nat;
+    itemKind : ItemKind__170971189;
+    permission : Permission__306695570;
+    sharedBy : Principal;
+    sharedWith : Principal
+  };
+type UserRole__778770049 = {#admin; #guest; #user};
+type UserRole__91647283 = {#admin; #guest; #user};
+{
+  "20260910_000000" : (_old : OldActor__190834961) -> NewActor__556041151
+}
+actor  {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__386906547<Principal, UserRole__91647283>
+    };
+  stable filesState :
+    {
+      activity : List__89170296<ActivityEntry__470865600>;
+      files : Map__386906547<FileId__570043862, FileEntry__396904133>;
+      folders : Map__386906547<FolderId__400921978, Folder__635271204>;
+      var nextActivityId : Nat;
+      var nextFileId : Nat;
+      var nextFolderId : Nat;
+      var nextShareId : Nat;
+      shares : Map__386906547<ShareId__1065474443, Share__801434090>
+    }
+};
